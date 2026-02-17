@@ -1,0 +1,5 @@
+Report Name: System Logs
+------------------------------
+Record: Login successful
+Record: File uploaded
+Record: User logged out
