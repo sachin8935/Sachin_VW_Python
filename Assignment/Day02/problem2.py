@@ -1,22 +1,17 @@
-def celsius_to_fahrenheit(c):
-    return (c * 9/5) + 32
+def farenheit_to_celcius(temprature):
+    return ((temprature-32)*(5/9))
+def celcius_to_farenheit(temprature):
+    return (temprature*(9/5))+32
 
-def fahrenheit_to_celsius(f):
-    return (f - 32) * 5/9
-
-
-print("1. Celsius to Fahrenheit")
-print("2. Fahrenheit to Celsius")
-
-choice = int(input("Enter your choice (1 or 2): "))
-
-if choice == 1:
-    c = float(input("Enter temperature in Celsius: "))
-    print("Temperature in Fahrenheit:", celsius_to_fahrenheit(c))
-
-elif choice == 2:
-    f = float(input("Enter temperature in Fahrenheit: "))
-    print("Temperature in Celsius:", fahrenheit_to_celsius(f))
-
+print("Enter 1 for fareneheit to celcius")
+print("Enter 2 for celcisu to farehenit")
+x= input("Enter your choice")
+x= int(x)
+if(x==1):
+    temprature = input("Enter temprature in farenheit")
+    temprature= int(temprature)
+    print(farenheit_to_celcius(temprature))
 else:
-    print("Invalid choice")
+    temprature = input("Enter temprature in celcius")
+    temprature= int(temprature)
+    print(celcius_to_farenheit(temprature))

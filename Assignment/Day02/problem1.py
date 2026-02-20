@@ -1,11 +1,10 @@
-#area of rectangle and permiter of rectangle
+# find area of rectangle and perimeter of rectangle
 def area_of_rectangle(length, width):
     return length*width
-def perimeter_of_rectangle(length, width):
+def permiter_of_rectangle(length,width):
     return 2*(length+width)
 
-length = int(input("enter the length "))
-width = int(input("enter the width "))
 
-print(area_of_rectangle(length,width))
-print(perimeter_of_rectangle(length,width))
+print(area_of_rectangle(20,40))
+print(permiter_of_rectangle(20,40))
+

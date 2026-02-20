@@ -1,5 +1,4 @@
-lst = list(map(int, input("Enter list elements separated by space: ").split()))
+arr = list(map(int,input("Enter the number you want to insert in list").split()))
 
-print("Alternate elements:")
-for i in range(0, len(lst), 2):
-    print(lst[i], end=" ")
+for i in range (0,len(arr),2):
+    print(arr)

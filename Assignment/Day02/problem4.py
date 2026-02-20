@@ -1,7 +1,4 @@
-a = int(input("Enter first number: "))
-b = int(input("Enter second number: "))
-c = int(input("Enter third number: "))
-
-average = (a + b + c) / 3
-
-print("Average of the three numbers is:", average)
+a= int(input("enter the first digit "))
+b= int(input("enter the second digit "))
+c= int(input("enter the third digit "))
+print((a+b+c)/3)
