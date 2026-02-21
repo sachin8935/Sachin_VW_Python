@@ -1,9 +1,14 @@
-s = input("Enter a string: ")
-chars = list(s)
+# Input a string from user and display unique characters in it. Hint: list(str) convert string to list of chars
+str = input("Enter the paragraph")
+arr= list(str)
+result={}
+for val in arr:
+    if(val in result):
+        result[val]+=1
+    else:
+        result[val]=1
+print(result)
 
-unique_chars = []
-for ch in chars:
-    if ch not in unique_chars:
-        unique_chars.append(ch)
-
-print("Unique characters:", unique_chars)
+for (key,val) in result.items():
+    if(val==1):
+        print(f'the character {key} has count {val}')
