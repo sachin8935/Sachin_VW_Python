@@ -3,341 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask API Demo - External API Calls</title>
+    <title>API Explorer - Flask Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: #0f0f23;
             min-height: 100vh;
-            padding: 20px;
+            color: #fff;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        header { text-align: center; margin-bottom: 40px; }
         h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-        .btn {
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-        .btn-users {
-            background: #00b894;
-            color: white;
-        }
-        .btn-posts {
-            background: #0984e3;
-            color: white;
-        }
-        .btn-joke {
-            background: #e17055;
-            color: white;
-        }
-        .btn-dog {
-            background: #fdcb6e;
-            color: #2d3436;
-        }
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        .result-container {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-left: 10px;
-            vertical-align: middle;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .error {
-            background: #ff7675;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            border-left: 4px solid #667eea;
-        }
-        .card h3 {
-            color: #2d3436;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
         }
-        .card p {
-            color: #636e72;
+        .subtitle { color: #888; font-size: 1rem; }
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .api-btn {
+            padding: 18px 20px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
             font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .api-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .api-btn .icon { font-size: 28px; }
+        .btn-user { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .btn-advice { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .btn-cat { background: linear-gradient(135deg, #4facfe, #00f2fe); color: #000; }
+        .btn-activity { background: linear-gradient(135deg, #43e97b, #38f9d7); color: #000; }
+        .btn-crypto { background: linear-gradient(135deg, #fa709a, #fee140); color: #000; }
+        .btn-trivia { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #000; }
+        .result-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            min-height: 300px;
+        }
+        .welcome-state { text-align: center; padding: 60px 20px; }
+        .welcome-state h2 { font-size: 1.8rem; margin-bottom: 15px; color: #fff; }
+        .welcome-state p { color: #888; }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+            gap: 20px;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .error-box {
+            background: rgba(255,107,107,0.2);
+            border: 1px solid #ff6b6b;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            color: #ff6b6b;
+        }
+        .user-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 20px;
+        }
+        .user-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #667eea;
+            box-shadow: 0 0 30px rgba(102,126,234,0.5);
+        }
+        .user-name { font-size: 1.5rem; font-weight: 600; }
+        .user-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .info-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .info-label {
+            color: #888;
+            font-size: 12px;
+            text-transform: uppercase;
             margin-bottom: 5px;
         }
-        .joke-container {
-            text-align: center;
-            padding: 30px;
+        .advice-card { text-align: center; padding: 40px 20px; }
+        .advice-text {
+            font-size: 1.6rem;
+            line-height: 1.6;
+            font-style: italic;
+            color: #f5576c;
         }
-        .joke-setup {
-            font-size: 22px;
-            color: #2d3436;
+        .advice-id { margin-top: 20px; color: #666; }
+        .cat-card { text-align: center; padding: 40px 20px; }
+        .cat-emoji { font-size: 80px; margin-bottom: 20px; }
+        .cat-fact { font-size: 1.3rem; line-height: 1.6; color: #4facfe; }
+        .activity-card { text-align: center; padding: 40px 20px; }
+        .activity-name { font-size: 1.5rem; color: #43e97b; margin-bottom: 20px; }
+        .activity-details { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .activity-badge {
+            background: rgba(67,233,123,0.2);
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        .crypto-card {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .crypto-item {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .crypto-name { font-size: 1.2rem; margin-bottom: 15px; }
+        .crypto-price { font-size: 2rem; font-weight: 700; color: #fee140; }
+        .crypto-inr { color: #888; margin-top: 10px; }
+        .trivia-card { text-align: center; padding: 30px 20px; }
+        .trivia-category {
+            background: rgba(168,237,234,0.2);
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #a8edea;
             margin-bottom: 20px;
         }
-        .joke-punchline {
-            font-size: 20px;
-            color: #e17055;
-            font-weight: 600;
+        .trivia-question { font-size: 1.4rem; margin-bottom: 25px; line-height: 1.5; }
+        .trivia-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-width: 500px;
+            margin: 0 auto;
         }
-        .dog-container {
-            text-align: center;
+        .trivia-option {
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
-        .dog-container img {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        #result {
-            min-height: 200px;
-        }
-        .welcome {
-            text-align: center;
-            padding: 50px;
-            color: #666;
-        }
-        .welcome h2 {
-            margin-bottom: 15px;
-            color: #2d3436;
-        }
+        .trivia-option:hover { background: rgba(255,255,255,0.1); border-color: #a8edea; }
+        .trivia-option.correct { background: rgba(67,233,123,0.3); border-color: #43e97b; }
+        .trivia-option.wrong { background: rgba(255,107,107,0.3); border-color: #ff6b6b; }
+        footer { text-align: center; margin-top: 40px; color: #555; font-size: 14px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🌐 External API Demo with Flask</h1>
-        
-        <div class="btn-group">
-            <button class="btn btn-users" onclick="fetchUsers()">👥 Get Users</button>
-            <button class="btn btn-posts" onclick="fetchPosts()">📝 Get Posts</button>
-            <button class="btn btn-joke" onclick="fetchJoke()">😂 Random Joke</button>
-            <button class="btn btn-dog" onclick="fetchDogImage()">🐕 Random Dog</button>
+        <header>
+            <h1>API Explorer</h1>
+            <p class="subtitle">Fetch real-time data from various APIs using Promises</p>
+        </header>
+        <div class="api-grid">
+            <button class="api-btn btn-user" onclick="fetchRandomUser()">
+                <span class="icon">👤</span><span>Random User</span>
+            </button>
+            <button class="api-btn btn-advice" onclick="fetchAdvice()">
+                <span class="icon">💡</span><span>Life Advice</span>
+            </button>
+            <button class="api-btn btn-cat" onclick="fetchCatFact()">
+                <span class="icon">🐱</span><span>Cat Fact</span>
+            </button>
+            <button class="api-btn btn-activity" onclick="fetchActivity()">
+                <span class="icon">🎯</span><span>Random Activity</span>
+            </button>
+            <button class="api-btn btn-crypto" onclick="fetchCryptoPrice()">
+                <span class="icon">₿</span><span>Crypto Prices</span>
+            </button>
+            <button class="api-btn btn-trivia" onclick="fetchTrivia()">
+                <span class="icon">❓</span><span>Trivia Quiz</span>
+            </button>
         </div>
-        
-        <div class="result-container">
+        <div class="result-card">
             <div id="result">
-                <div class="welcome">
-                    <h2>Welcome!</h2>
-                    <p>Click any button above to fetch data from external APIs using Promises</p>
+                <div class="welcome-state">
+                    <h2>Welcome! 👋</h2>
+                    <p>Click any button above to fetch live data from external APIs</p>
                 </div>
             </div>
         </div>
+        <footer>Built with Flask & JavaScript Promises</footer>
     </div>
 
     <script>
         const resultDiv = document.getElementById('result');
+        let currentAnswer = '';
 
-        // Helper function to show loading state
         function showLoading() {
-            resultDiv.innerHTML = '<div class="loading">Fetching data...</div>';
+            resultDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Fetching data...</p></div>';
         }
 
-        // Helper function to show error
         function showError(message) {
-            resultDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+            resultDiv.innerHTML = '<div class="error-box">Error: ' + message + '</div>';
         }
 
-        // Fetch Users using Promise
-        function fetchUsers() {
+        // Fetch Random User - Using Promise chain
+        function fetchRandomUser() {
             showLoading();
-            
-            // Using fetch with Promise
-            fetch('/api/users')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+            fetch('/api/random-user')
+                .then(function(response) {
+                    if (!response.ok) throw new Error('Network error');
                     return response.json();
                 })
-                .then(data => {
+                .then(function(data) {
                     if (data.success) {
-                        displayUsers(data.data);
+                        const user = data.data;
+                        resultDiv.innerHTML = '<div class="user-card">' +
+                            '<img src="' + user.picture.large + '" alt="User" class="user-avatar">' +
+                            '<div class="user-name">' + user.name.first + ' ' + user.name.last + '</div>' +
+                            '<div class="user-info">' +
+                            '<div class="info-item"><div class="info-label">📧 Email</div><div>' + user.email + '</div></div>' +
+                            '<div class="info-item"><div class="info-label">📍 Location</div><div>' + user.location.city + ', ' + user.location.country + '</div></div>' +
+                            '<div class="info-item"><div class="info-label">📞 Phone</div><div>' + user.phone + '</div></div>' +
+                            '<div class="info-item"><div class="info-label">🎂 Age</div><div>' + user.dob.age + ' years old</div></div>' +
+                            '</div></div>';
                     } else {
                         showError(data.error);
                     }
                 })
-                .catch(error => {
+                .catch(function(error) {
                     showError(error.message);
                 });
         }
 
-        // Display users in card format
-        function displayUsers(users) {
-            let html = '<div class="card-grid">';
-            users.forEach(user => {
-                html += `
-                    <div class="card">
-                        <h3>${user.name}</h3>
-                        <p><strong>Username:</strong> ${user.username}</p>
-                        <p><strong>Email:</strong> ${user.email}</p>
-                        <p><strong>City:</strong> ${user.address.city}</p>
-                        <p><strong>Company:</strong> ${user.company.name}</p>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            resultDiv.innerHTML = html;
-        }
-
-        // Fetch Posts using Promise
-        function fetchPosts() {
+        // Fetch Advice - Using custom Promise
+        function fetchAdvice() {
             showLoading();
-            
-            // Using Promise with fetch
-            new Promise((resolve, reject) => {
-                fetch('/api/posts')
-                    .then(response => {
-                        if (!response.ok) {
-                            reject(new Error('Failed to fetch posts'));
+            var getAdvice = new Promise(function(resolve, reject) {
+                fetch('/api/advice')
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (data.success) {
+                            resolve(data.data);
+                        } else {
+                            reject(data.error);
                         }
-                        return response.json();
                     })
-                    .then(data => resolve(data))
-                    .catch(error => reject(error));
-            })
-            .then(data => {
-                if (data.success) {
-                    displayPosts(data.data);
-                } else {
-                    showError(data.error);
-                }
-            })
-            .catch(error => {
-                showError(error.message);
+                    .catch(function(err) { reject(err.message); });
             });
-        }
 
-        // Display posts
-        function displayPosts(posts) {
-            let html = '<div class="card-grid">';
-            posts.forEach(post => {
-                html += `
-                    <div class="card">
-                        <h3>${post.title.substring(0, 50)}...</h3>
-                        <p>${post.body.substring(0, 100)}...</p>
-                        <p><strong>Post ID:</strong> ${post.id}</p>
-                    </div>
-                `;
-            });
-            html += '</div>';
-            resultDiv.innerHTML = html;
-        }
-
-        // Fetch Random Joke using Promise
-        function fetchJoke() {
-            showLoading();
-            
-            // Custom Promise wrapper for API call
-            const getJoke = () => {
-                return new Promise((resolve, reject) => {
-                    fetch('/api/random-joke')
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                resolve(data.data);
-                            } else {
-                                reject(new Error(data.error));
-                            }
-                        })
-                        .catch(error => reject(error));
-                });
-            };
-
-            getJoke()
-                .then(joke => {
-                    resultDiv.innerHTML = `
-                        <div class="joke-container">
-                            <div class="joke-setup">${joke.setup}</div>
-                            <div class="joke-punchline">${joke.punchline}</div>
-                        </div>
-                    `;
+            getAdvice
+                .then(function(advice) {
+                    resultDiv.innerHTML = '<div class="advice-card">' +
+                        '<p class="advice-text">"' + advice.advice + '"</p>' +
+                        '<p class="advice-id">Advice #' + advice.id + '</p></div>';
                 })
-                .catch(error => {
+                .catch(function(error) {
+                    showError(error);
+                });
+        }
+
+        // Fetch Cat Fact - Using Promise
+        function fetchCatFact() {
+            showLoading();
+            fetch('/api/cat-fact')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        resultDiv.innerHTML = '<div class="cat-card">' +
+                            '<div class="cat-emoji">🐱</div>' +
+                            '<p class="cat-fact">' + data.data.fact + '</p></div>';
+                    } else {
+                        showError(data.error);
+                    }
+                })
+                .catch(function(error) {
                     showError(error.message);
                 });
         }
 
-        // Fetch Random Dog Image using async/await (Promise-based)
-        async function fetchDogImage() {
+        // Fetch Activity - Using async/await (Promise-based)
+        async function fetchActivity() {
             showLoading();
-            
             try {
-                // Using async/await which is Promise-based
-                const response = await fetch('/api/dog-image');
+                const response = await fetch('/api/activity');
                 const data = await response.json();
-                
                 if (data.success) {
-                    // Create a new Promise to handle image loading
-                    const imageLoadPromise = new Promise((resolve, reject) => {
-                        const img = new Image();
-                        img.onload = () => resolve(img.src);
-                        img.onerror = () => reject(new Error('Failed to load image'));
-                        img.src = data.data.message;
-                    });
-
-                    await imageLoadPromise;
-                    
-                    resultDiv.innerHTML = `
-                        <div class="dog-container">
-                            <img src="${data.data.message}" alt="Random Dog">
-                            <p style="margin-top: 15px; color: #666;">🐕 Woof! Here's a random doggo!</p>
-                        </div>
-                    `;
+                    const activity = data.data;
+                    resultDiv.innerHTML = '<div class="activity-card">' +
+                        '<div class="activity-name">' + activity.activity + '</div>' +
+                        '<div class="activity-details">' +
+                        '<span class="activity-badge">👥 ' + activity.participants + ' participant(s)</span>' +
+                        '<span class="activity-badge">📂 ' + activity.type + '</span>' +
+                        '</div></div>';
                 } else {
                     showError(data.error);
                 }
@@ -346,21 +336,87 @@
             }
         }
 
-        // Example of Promise.all - Fetch multiple APIs simultaneously
-        function fetchAll() {
+        // Fetch Crypto Prices - Using Promise.resolve chain
+        function fetchCryptoPrice() {
             showLoading();
-            
-            Promise.all([
-                fetch('/api/users').then(r => r.json()),
-                fetch('/api/posts').then(r => r.json()),
-                fetch('/api/random-joke').then(r => r.json())
-            ])
-            .then(([users, posts, joke]) => {
-                console.log('All data fetched:', { users, posts, joke });
-            })
-            .catch(error => {
-                showError(error.message);
+            Promise.resolve()
+                .then(function() { return fetch('/api/bitcoin-price'); })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        const prices = data.data;
+                        resultDiv.innerHTML = '<div class="crypto-card">' +
+                            '<div class="crypto-item">' +
+                            '<div class="crypto-name">₿ Bitcoin</div>' +
+                            '<div class="crypto-price">$' + prices.bitcoin.usd.toLocaleString() + '</div>' +
+                            '<div class="crypto-inr">₹' + prices.bitcoin.inr.toLocaleString() + '</div></div>' +
+                            '<div class="crypto-item">' +
+                            '<div class="crypto-name">Ξ Ethereum</div>' +
+                            '<div class="crypto-price">$' + prices.ethereum.usd.toLocaleString() + '</div>' +
+                            '<div class="crypto-inr">₹' + prices.ethereum.inr.toLocaleString() + '</div></div></div>';
+                    } else {
+                        showError(data.error);
+                    }
+                })
+                .catch(function(error) {
+                    showError(error.message);
+                });
+        }
+
+        // Fetch Trivia - Using Promise with interactive quiz
+        function fetchTrivia() {
+            showLoading();
+            fetch('/api/trivia')
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if (data.success) {
+                        const trivia = data.data;
+                        currentAnswer = trivia.correct_answer;
+                        const answers = trivia.incorrect_answers.concat([trivia.correct_answer]);
+                        // Shuffle
+                        for (let i = answers.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [answers[i], answers[j]] = [answers[j], answers[i]];
+                        }
+                        
+                        function decodeHTML(html) {
+                            const txt = document.createElement('textarea');
+                            txt.innerHTML = html;
+                            return txt.value;
+                        }
+                        
+                        let optionsHtml = '';
+                        answers.forEach(function(ans) {
+                            const decoded = decodeHTML(ans);
+                            optionsHtml += '<div class="trivia-option" onclick="checkAnswer(this, \'' + decoded.replace(/'/g, "\\'") + '\')">' + decoded + '</div>';
+                        });
+                        
+                        resultDiv.innerHTML = '<div class="trivia-card">' +
+                            '<div class="trivia-category">' + decodeHTML(trivia.category) + '</div>' +
+                            '<p class="trivia-question">' + decodeHTML(trivia.question) + '</p>' +
+                            '<div class="trivia-options">' + optionsHtml + '</div></div>';
+                    } else {
+                        showError(data.error);
+                    }
+                })
+                .catch(function(error) {
+                    showError(error.message);
+                });
+        }
+
+        function checkAnswer(element, selected) {
+            const options = document.querySelectorAll('.trivia-option');
+            const decoded = document.createElement('textarea');
+            decoded.innerHTML = currentAnswer;
+            options.forEach(function(opt) {
+                opt.style.pointerEvents = 'none';
+                if (opt.textContent.trim() === decoded.value) {
+                    opt.classList.add('correct');
+                }
             });
+            if (selected !== decoded.value) {
+                element.classList.add('wrong');
+            }
         }
     </script>
 </body>
