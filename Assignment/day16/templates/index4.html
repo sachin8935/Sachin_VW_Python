@@ -1,0 +1,21 @@
+Total Products: {{ total }} <br><br>
+
+{% if products %}
+
+{% for product in products %}
+------------------------- <br>
+Name: {{ product.name }} <br>
+Category: {{ product.category }} <br>
+Price: ₹{{ product.price }} <br>
+Status:
+{% if product.available %}
+Available
+{% else %}
+Out of Stock
+{% endif %}
+<br><br>
+{% endfor %}
+
+{% else %}
+No products found.
+{% endif %}

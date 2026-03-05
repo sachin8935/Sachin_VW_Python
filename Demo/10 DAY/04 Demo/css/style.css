@@ -1,0 +1,34 @@
+/* header{
+  background-color: lightblue;
+  width: 50%;
+} */
+/* html{
+  default value of font-size 
+  font-size:16px; 
+}  */
+
+body{
+  border: 2px solid red;
+  min-height: 100vh;
+  /* It selects entire hight, not just content body */
+}
+
+h1{
+  /* border-width: 2px;
+  border-style: dashed;
+  border-color: red; */
+  border: 2px dashed red;
+  /* width:50%; */
+  width:50vw;
+}
+/* rem follows default root element.i.e browser's default font-size */
+/* em follows immediate container's font-size */
+main{
+  background-color: rgb(231, 238, 231);
+  /* font-size: 24px; */
+}
+p{
+  font-size: 1em;
+  /* font-size: 2rem; */
+  /* width:10rem; */
+}

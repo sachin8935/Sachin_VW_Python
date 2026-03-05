@@ -1,0 +1,40 @@
+/* Tag Selectors /Element Selector: based on element name they group all respective tags from the page. Usage: common style rules for all the documents*/
+
+body{
+   font-size: 22px;
+   /* color:red; */
+   /* border: 2px solid red; */
+}
+
+h1,h2{
+  color:blue;
+}
+
+main{
+  font-family: monospace;
+}
+
+p{
+  color: purple;
+}
+
+/* p span{
+  text-transform: uppercase;
+  background-color: gold;
+} */
+
+/* class selector */
+.hightlight{
+  text-transform: uppercase;
+  background-color: gold;
+}
+
+.gray{
+  color:gray;
+}
+
+/* id selector:  */
+#second {
+  font-style:italic;
+}
+

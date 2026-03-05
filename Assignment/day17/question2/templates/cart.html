@@ -1,0 +1,50 @@
+<h2>Your Cart</h2>
+
+<table>
+
+<tr>
+<th>Product</th>
+<th>Quantity</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+
+{% for product, qty, price in items %}
+
+<tr>
+
+<td>{{ product }}</td>
+
+<td>{{ qty }}</td>
+
+<td>₹{{ price }}</td>
+
+<td>
+
+<a href="/cart/increase/{{ product }}">
+<button>+</button>
+</a>
+
+<a href="/cart/decrease/{{ product }}">
+<button>-</button>
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h3>Total: ₹{{ total }}</h3>
+
+<br>
+
+<a href="/cart/clear">
+<button>Clear Cart</button>
+</a>
+
+<a href="/">
+<button>Continue Shopping</button>
+</a>

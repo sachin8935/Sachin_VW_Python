@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Render Blocker</title>
+  </head>
+  <body>
+    <p id="p1">Hello</p>
+    <script>
+      var p1Ref = document.getElementById('p1');
+      p1Ref.textContent = 'Good Afternoon!!';
+    </script>
+  </body>
+</html>

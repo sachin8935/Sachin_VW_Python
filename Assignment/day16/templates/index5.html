@@ -1,0 +1,34 @@
+
+{{ role | title }} Dashboard <br><br>
+
+Navigation:
+{% if role == "admin" %}
+    Home | Manage Users | Reports | Settings
+{% elif role == "manager" %}
+    Home | Team | Reports
+{% else %}
+    Home | My Profile
+{% endif %}
+
+<br><br>
+
+Employee List:<br><br>
+
+{% for emp in employees %}
+
+<b>Name:</b> {{ emp.name }} <br>
+<b>Department:</b> {{ emp.department }} <br>
+<b>Email:</b> {{ emp.name | lower }}@company.com <br>
+<b>Status:</b> Active <br>
+
+{% if role in ["admin", "manager"] %}
+<b>Salary:</b> ₹{{ emp.salary }} <br>
+{% endif %}
+
+{% if role == "admin" %}
+<button>Delete</button>
+{% endif %}
+
+<hr>
+
+{% endfor %}

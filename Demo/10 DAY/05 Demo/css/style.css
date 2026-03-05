@@ -1,0 +1,28 @@
+/* Universal Selector */
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.outer-container{
+  outline: 2px solid rgb(93, 0, 255);
+  background-color: gold;
+  height: 500px;
+  width: 200px;
+}
+
+.inner-container{
+  /* margin: 2px 3px 4px 5px; */
+  /* padding: 2px 3px 4px 5px; */
+  background-color: dodgerblue;
+  outline: 2px solid red;
+  height: 200px;
+  width: 200px;  
+}
+
+/* Box Model = margin + border + padding + content */
+
+/* oc: width: 200px, height : 500px */
+/* ic: total width : 236px, total height: 232px*/
+
+/* width: 208, heigh: 206 */

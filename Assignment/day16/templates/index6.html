@@ -1,0 +1,20 @@
+<h2>User Comments</h2>
+
+{% for c in comments %}
+<div style="margin-bottom:15px; {% if c.flagged %}color:red;{% endif %}">
+    <b>{{ c.username }}</b>: {{ c.comment }} <br>
+    Likes: {{ c.likes }} <br>
+
+    {% if c.tags %}
+        <i>{{ c.tags | join(', ') }}</i>
+    {% endif %}
+</div>
+{% endfor %}
+
+<hr>
+
+<h3>Statistics</h3>
+Total Comments: {{ total }} <br>
+Flagged Comments: {{ flagged }} <br>
+Most Liked Comment By: {{ most_liked }} <br>
+All Users: {{ users }}

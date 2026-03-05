@@ -1,0 +1,18 @@
+bosy{
+  font-family: sans-serif;
+  padding: 20px;
+  background-color: #f0f4f8;
+}
+
+button{
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+#output{
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  min-height: 100px;
+}

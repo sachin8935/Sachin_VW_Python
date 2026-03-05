@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form Tag</title>
+  </head>
+  <body>
+    <!-- Forms collections of input textboxex : user given values -->
+    <!-- it reads name attribute of those textboxes and genrates key value pair based collection internally -->
+    <!-- key = input tag name attribute -->
+    <!-- http://127.0.0.1:5500/action-page.php -->
+    <form method="post" action="/action-page.php">
+      <label for="txtName">Name:</label>
+      <input type="text" name="txtName" />
+      <br />
+      <br />
+      <label for="txtAge"> Age:</label>
+      <input type="number" name="txtAge" />
+      <br />
+      <br />
+      <label for="txtpwd"> Password:</label>
+      <input type="password" name="txtpwd" />
+      <br />
+      <br />
+      <input type="submit" value="Submit Data To server Side" />
+    </form>
+  </body>
+</html>
