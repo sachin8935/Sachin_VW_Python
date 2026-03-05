@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask API Demo - External API Calls</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        .btn-users {
+            background: #00b894;
+            color: white;
+        }
+        .btn-posts {
+            background: #0984e3;
+            color: white;
+        }
+        .btn-joke {
+            background: #e17055;
+            color: white;
+        }
+        .btn-dog {
+            background: #fdcb6e;
+            color: #2d3436;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .result-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            background: #ff7675;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .card h3 {
+            color: #2d3436;
+            margin-bottom: 10px;
+        }
+        .card p {
+            color: #636e72;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .joke-container {
+            text-align: center;
+            padding: 30px;
+        }
+        .joke-setup {
+            font-size: 22px;
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+        .joke-punchline {
+            font-size: 20px;
+            color: #e17055;
+            font-weight: 600;
+        }
+        .dog-container {
+            text-align: center;
+        }
+        .dog-container img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        #result {
+            min-height: 200px;
+        }
+        .welcome {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        .welcome h2 {
+            margin-bottom: 15px;
+            color: #2d3436;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 External API Demo with Flask</h1>
+        
+        <div class="btn-group">
+            <button class="btn btn-users" onclick="fetchUsers()">👥 Get Users</button>
+            <button class="btn btn-posts" onclick="fetchPosts()">📝 Get Posts</button>
+            <button class="btn btn-joke" onclick="fetchJoke()">😂 Random Joke</button>
+            <button class="btn btn-dog" onclick="fetchDogImage()">🐕 Random Dog</button>
+        </div>
+        
+        <div class="result-container">
+            <div id="result">
+                <div class="welcome">
+                    <h2>Welcome!</h2>
+                    <p>Click any button above to fetch data from external APIs using Promises</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resultDiv = document.getElementById('result');
+
+        // Helper function to show loading state
+        function showLoading() {
+            resultDiv.innerHTML = '<div class="loading">Fetching data...</div>';
+        }
+
+        // Helper function to show error
+        function showError(message) {
+            resultDiv.innerHTML = `<div class="error">❌ Error: ${message}</div>`;
+        }
+
+        // Fetch Users using Promise
+        function fetchUsers() {
+            showLoading();
+            
+            // Using fetch with Promise
+            fetch('/api/users')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        displayUsers(data.data);
+                    } else {
+                        showError(data.error);
+                    }
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+        // Display users in card format
+        function displayUsers(users) {
+            let html = '<div class="card-grid">';
+            users.forEach(user => {
+                html += `
+                    <div class="card">
+                        <h3>${user.name}</h3>
+                        <p><strong>Username:</strong> ${user.username}</p>
+                        <p><strong>Email:</strong> ${user.email}</p>
+                        <p><strong>City:</strong> ${user.address.city}</p>
+                        <p><strong>Company:</strong> ${user.company.name}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+
+        // Fetch Posts using Promise
+        function fetchPosts() {
+            showLoading();
+            
+            // Using Promise with fetch
+            new Promise((resolve, reject) => {
+                fetch('/api/posts')
+                    .then(response => {
+                        if (!response.ok) {
+                            reject(new Error('Failed to fetch posts'));
+                        }
+                        return response.json();
+                    })
+                    .then(data => resolve(data))
+                    .catch(error => reject(error));
+            })
+            .then(data => {
+                if (data.success) {
+                    displayPosts(data.data);
+                } else {
+                    showError(data.error);
+                }
+            })
+            .catch(error => {
+                showError(error.message);
+            });
+        }
+
+        // Display posts
+        function displayPosts(posts) {
+            let html = '<div class="card-grid">';
+            posts.forEach(post => {
+                html += `
+                    <div class="card">
+                        <h3>${post.title.substring(0, 50)}...</h3>
+                        <p>${post.body.substring(0, 100)}...</p>
+                        <p><strong>Post ID:</strong> ${post.id}</p>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            resultDiv.innerHTML = html;
+        }
+
+        // Fetch Random Joke using Promise
+        function fetchJoke() {
+            showLoading();
+            
+            // Custom Promise wrapper for API call
+            const getJoke = () => {
+                return new Promise((resolve, reject) => {
+                    fetch('/api/random-joke')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                resolve(data.data);
+                            } else {
+                                reject(new Error(data.error));
+                            }
+                        })
+                        .catch(error => reject(error));
+                });
+            };
+
+            getJoke()
+                .then(joke => {
+                    resultDiv.innerHTML = `
+                        <div class="joke-container">
+                            <div class="joke-setup">${joke.setup}</div>
+                            <div class="joke-punchline">${joke.punchline}</div>
+                        </div>
+                    `;
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+        // Fetch Random Dog Image using async/await (Promise-based)
+        async function fetchDogImage() {
+            showLoading();
+            
+            try {
+                // Using async/await which is Promise-based
+                const response = await fetch('/api/dog-image');
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Create a new Promise to handle image loading
+                    const imageLoadPromise = new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.onload = () => resolve(img.src);
+                        img.onerror = () => reject(new Error('Failed to load image'));
+                        img.src = data.data.message;
+                    });
+
+                    await imageLoadPromise;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="dog-container">
+                            <img src="${data.data.message}" alt="Random Dog">
+                            <p style="margin-top: 15px; color: #666;">🐕 Woof! Here's a random doggo!</p>
+                        </div>
+                    `;
+                } else {
+                    showError(data.error);
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        // Example of Promise.all - Fetch multiple APIs simultaneously
+        function fetchAll() {
+            showLoading();
+            
+            Promise.all([
+                fetch('/api/users').then(r => r.json()),
+                fetch('/api/posts').then(r => r.json()),
+                fetch('/api/random-joke').then(r => r.json())
+            ])
+            .then(([users, posts, joke]) => {
+                console.log('All data fetched:', { users, posts, joke });
+            })
+            .catch(error => {
+                showError(error.message);
+            });
+        }
+    </script>
+</body>
+</html>
