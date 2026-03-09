@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript DOM Tasks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .task-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .task-title {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Task 1 Styles */
+        #task1-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #message-text {
+            transition: all 0.3s ease;
+        }
+
+        .birthday-message {
+            font-size: 50px !important;
+            color: #ff6b6b !important;
+            text-align: center;
+            animation: celebrate 0.5s ease infinite alternate;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @keyframes celebrate {
+            0% { transform: scale(1); color: #ff6b6b; }
+            50% { transform: scale(1.1); color: #feca57; }
+            100% { transform: scale(1); color: #48dbfb; }
+        }
+
+        .birthday-container {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            animation: bgChange 2s ease infinite;
+        }
+
+        @keyframes bgChange {
+            0% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            33% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+            66% { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+            100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        }
+
+        .birthday-gif {
+            width: 300px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+
+        /* Task 2 Styles */
+        .bulb-container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .bulb {
+            width: 100px;
+            height: 150px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        .bulb-glass {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+
+        .bulb-glass.on {
+            background: #ffeb3b;
+            box-shadow: 0 0 50px #ffeb3b, 0 0 100px #ffcc00;
+        }
+
+        .bulb-base {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(#666, #333);
+            margin: 0 auto;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .bulb-screw {
+            width: 30px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                0deg,
+                #888,
+                #888 3px,
+                #666 3px,
+                #666 6px
+            );
+            margin: 0 auto;
+        }
+
+        #on-btn {
+            background-color: #28a745;
+            color: white;
+        }
+
+        #off-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .bulb-status {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Task 3 Styles */
+        .car-container {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 60%, #228B22 60%, #228B22 70%, #555 70%, #555 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .car {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 120px;
+            height: 60px;
+            transition: left 0.3s ease;
+        }
+
+        /* CSS Car Design */
+        .car-body {
+            position: absolute;
+            bottom: 15px;
+            width: 120px;
+            height: 35px;
+            background: #e74c3c;
+            border-radius: 10px;
+        }
+
+        .car-top {
+            position: absolute;
+            bottom: 45px;
+            left: 25px;
+            width: 70px;
+            height: 30px;
+            background: #c0392b;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .car-window {
+            position: absolute;
+            bottom: 50px;
+            left: 35px;
+            width: 50px;
+            height: 20px;
+            background: #85c1e9;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .wheel {
+            position: absolute;
+            bottom: 5px;
+            width: 25px;
+            height: 25px;
+            background: #333;
+            border-radius: 50%;
+            border: 3px solid #666;
+        }
+
+        .wheel-front {
+            left: 15px;
+        }
+
+        .wheel-back {
+            right: 15px;
+        }
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: #999;
+            border-radius: 50%;
+        }
+
+        #move-btn {
+            background-color: #9b59b6;
+            color: white;
+            margin-top: 15px;
+        }
+
+        .road-line {
+            position: absolute;
+            bottom: 15px;
+            width: 50px;
+            height: 5px;
+            background: white;
+        }
+
+        .distance-display {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Task 1: Birthday Message -->
+    <div class="task-section">
+        <h2 class="task-title">Task 1: Birthday Message</h2>
+        <div id="task1-content">
+            <h4 id="heading-text">There is a message for you!!</h4>
+            <p id="message-text">wait..</p>
+            <button id="task1-btn" onclick="handleClick()">Click here to get it!</button>
+        </div>
+    </div>
+
+    <!-- Task 2: Bulb On/Off -->
+    <div class="task-section">
+        <h2 class="task-title">Task 2: Bulb On/Off</h2>
+        <div class="bulb-container">
+            <div class="bulb">
+                <div class="bulb-glass" id="bulb-glass"></div>
+                <div class="bulb-base"></div>
+                <div class="bulb-screw"></div>
+            </div>
+            <p class="bulb-status" id="bulb-status">Bulb is OFF</p>
+            <div>
+                <button id="on-btn" onclick="turnOn()">Turn ON</button>
+                <button id="off-btn" onclick="turnOff()">Turn OFF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task 3: Moving Car -->
+    <div class="task-section">
+        <h2 class="task-title">Task 3: Moving Car</h2>
+        <div class="car-container" id="car-container">
+            <!-- Road lines -->
+            <div class="road-line" style="left: 50px;"></div>
+            <div class="road-line" style="left: 150px;"></div>
+            <div class="road-line" style="left: 250px;"></div>
+            <div class="road-line" style="left: 350px;"></div>
+            <div class="road-line" style="left: 450px;"></div>
+            <div class="road-line" style="left: 550px;"></div>
+            <div class="road-line" style="left: 650px;"></div>
+            <div class="road-line" style="left: 750px;"></div>
+            
+            <!-- Car -->
+            <div class="car" id="car">
+                <div class="car-top"></div>
+                <div class="car-window"></div>
+                <div class="car-body"></div>
+                <div class="wheel wheel-front">
+                    <div class="wheel-center"></div>
+                </div>
+                <div class="wheel wheel-back">
+                    <div class="wheel-center"></div>
+                </div>
+            </div>
+        </div>
+        <button id="move-btn" onclick="moveCar()">Move Car Forward 🚗</button>
+        <p class="distance-display">Distance traveled: <span id="distance">0</span> px</p>
+    </div>
+
+    <script>
+        // =====================
+        // TASK 1: Birthday Message
+        // =====================
+        let clickCount = 0;
+        const colors = ['#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f39c12', '#1abc9c'];
+        
+        function handleClick() {
+            clickCount++;
+            const messageText = document.getElementById('message-text');
+            const heading = document.getElementById('heading-text');
+            const btn = document.getElementById('task1-btn');
+            const content = document.getElementById('task1-content');
+            
+            if (clickCount < 4) {
+                // Increase font size by 20px and change color
+                let currentSize = window.getComputedStyle(messageText).fontSize;
+                let newSize = parseInt(currentSize) + 20;
+                messageText.style.fontSize = newSize + 'px';
+                
+                // Random color each click
+                let randomColor = colors[Math.floor(Math.random() * colors.length)];
+                messageText.style.color = randomColor;
+                messageText.style.fontWeight = 'bold';
+                
+                // Update message
+                messageText.textContent = `Click ${clickCount}... keep going!`;
+            } else {
+                // After 4 clicks - Show Birthday Message
+                // Remove previous content
+                heading.style.display = 'none';
+                btn.style.display = 'none';
+                
+                // Reset and apply birthday styles
+                messageText.removeAttribute('style');
+                messageText.className = 'birthday-message';
+                messageText.textContent = '🎉 Happy Birthday! 🎂';
+                
+                // Create birthday container effect
+                content.className = 'birthday-container';
+                
+                // Add birthday GIF/image
+                const gifDiv = document.createElement('div');
+                gifDiv.innerHTML = `
+                    <img src="https://media.giphy.com/media/g5R9dok94mrIvplmZd/giphy.gif" 
+                         alt="Birthday Celebration" 
+                         class="birthday-gif"
+                         onerror="this.src='https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcDZtYnV4ZnB0Y3Q4ZzNxYzB0ZnVyaGE4a2FhYnc1N2Zha3N4c2d1biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KdC9XVrVYOVu6zZiMQ/giphy.gif'">
+                    <p style="color: white; font-size: 20px; margin-top: 20px;">🎈 Wishing you all the best! 🎈</p>
+                `;
+                content.appendChild(gifDiv);
+            }
+        }
+
+        // =====================
+        // TASK 2: Bulb On/Off
+        // =====================
+        function turnOn() {
+            const bulbGlass = document.getElementById('bulb-glass');
+            const bulbStatus = document.getElementById('bulb-status');
+            
+            bulbGlass.classList.add('on');
+            bulbStatus.textContent = 'Bulb is ON';
+            bulbStatus.style.color = '#28a745';
+        }
+
+        function turnOff() {
+            const bulbGlass = document.getElementById('bulb-glass');
+            const bulbStatus = document.getElementById('bulb-status');
+            
+            bulbGlass.classList.remove('on');
+            bulbStatus.textContent = 'Bulb is OFF';
+            bulbStatus.style.color = '#dc3545';
+        }
+
+        // =====================
+        // TASK 3: Moving Car
+        // =====================
+        let carPosition = 0;
+        const moveDistance = 50; // pixels to move per click
+
+        function moveCar() {
+            const car = document.getElementById('car');
+            const carContainer = document.getElementById('car-container');
+            const distanceDisplay = document.getElementById('distance');
+            
+            const maxPosition = carContainer.offsetWidth - 130; // container width minus car width
+            
+            carPosition += moveDistance;
+            
+            // Reset to start if car reaches the end
+            if (carPosition > maxPosition) {
+                carPosition = 0;
+            }
+            
+            car.style.left = carPosition + 'px';
+            distanceDisplay.textContent = carPosition;
+        }
+    </script>
+
+</body>
+</html>
