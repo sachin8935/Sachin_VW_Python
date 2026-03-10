@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}All Employees - Employee Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>All Employees</h2>
+    {% if current_user.role == 'admin' %}
+    <a href="{{ url_for('employees.create_employee') }}" class="btn btn-primary">Add Employee</a>
+    {% endif %}
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Manager</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee.id }}</td>
+            <td>{{ employee.name }}</td>
+            <td>{{ employee.email }}</td>
+            <td>{{ employee.department }}</td>
+            <td>{{ employee.manager.name if employee.manager else 'N/A' }}</td>
+            <td class="actions">
+                <a href="{{ url_for('employees.view_employee', id=employee.id) }}" class="btn btn-sm btn-info">View</a>
+                {% if current_user.role == 'admin' or (current_user.role == 'manager' and employee.manager_id == current_user.employee_id) %}
+                <a href="{{ url_for('employees.edit_employee', id=employee.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                {% endif %}
+                {% if current_user.role == 'admin' %}
+                <form action="{{ url_for('employees.delete_employee', id=employee.id) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">No employees found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

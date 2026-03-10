@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users - Employee Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Manage Users</h2>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Linked Employee</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td><span class="badge badge-{{ user.role }}">{{ user.role }}</span></td>
+            <td>{{ user.employee.name if user.employee else 'Not Linked' }}</td>
+            <td class="actions">
+                <a href="{{ url_for('employees.assign_role', user_id=user.id) }}" class="btn btn-sm btn-warning">Assign Role</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">No users found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

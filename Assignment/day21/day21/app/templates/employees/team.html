@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}My Team - Employee Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>My Team</h2>
+</div>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for member in team_members %}
+        <tr>
+            <td>{{ member.id }}</td>
+            <td>{{ member.name }}</td>
+            <td>{{ member.email }}</td>
+            <td>{{ member.department }}</td>
+            <td class="actions">
+                <a href="{{ url_for('employees.view_employee', id=member.id) }}" class="btn btn-sm btn-info">View</a>
+                <a href="{{ url_for('employees.edit_employee', id=member.id) }}" class="btn btn-sm btn-warning">Edit</a>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5">No team members found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

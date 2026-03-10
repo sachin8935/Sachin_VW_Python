@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ employee.name }} - Employee Portal{% endblock %}
+
+{% block content %}
+<div class="employee-profile">
+    <h2>Employee Profile</h2>
+    <div class="profile-card">
+        <div class="profile-info">
+            <p><strong>ID:</strong> {{ employee.id }}</p>
+            <p><strong>Name:</strong> {{ employee.name }}</p>
+            <p><strong>Email:</strong> {{ employee.email }}</p>
+            <p><strong>Department:</strong> {{ employee.department }}</p>
+            <p><strong>Manager:</strong> {{ employee.manager.name if employee.manager else 'N/A' }}</p>
+        </div>
+        
+        <div class="profile-actions">
+            {% if current_user.role == 'admin' or 
+               (current_user.role == 'manager' and (employee.manager_id == current_user.employee_id or employee.id == current_user.employee_id)) or
+               (current_user.role == 'employee' and employee.id == current_user.employee_id) %}
+            <a href="{{ url_for('employees.edit_employee', id=employee.id) }}" class="btn btn-warning">Edit</a>
+            {% endif %}
+            
+            {% if current_user.role == 'admin' %}
+            <form action="{{ url_for('employees.delete_employee', id=employee.id) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this employee?')">Delete</button>
+            </form>
+            {% endif %}
+            
+            {% if current_user.role in ['admin', 'manager'] %}
+            <a href="{{ url_for('employees.list_employees') }}" class="btn btn-secondary">Back to List</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if employee.team_members %}
+    <div class="team-section">
+        <h3>Team Members</h3>
+        <ul class="team-list">
+            {% for member in employee.team_members %}
+            <li><a href="{{ url_for('employees.view_employee', id=member.id) }}">{{ member.name }}</a> - {{ member.department }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

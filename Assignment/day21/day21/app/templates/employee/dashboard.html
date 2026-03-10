@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Welcome, {{ employee.name }}</h1>
+        <p>Email: {{ employee.email }}</p>
+        <p>Department: {{ employee.department }}</p>
+        <p>Manager: {{ employee.manager.name if employee.manager else 'N/A' }}</p>
+        
+        <h2>Your Tasks</h2>
+        <ul>
+            {% for task in tasks %}
+                <li>{{ task.description }} - Due: {{ task.due_date }}</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{{ url_for('employee.profile') }}">Edit Profile</a>
+    </div>
+</body>
+</html>

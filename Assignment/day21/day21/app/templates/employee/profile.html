@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Profile of {{ employee.name }}</h1>
+        <form method="POST" action="{{ url_for('employee.update_profile', employee_id=employee.id) }}">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" value="{{ employee.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ employee.email }}" required>
+            </div>
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <input type="text" id="department" name="department" value="{{ employee.department }}" required>
+            </div>
+            <div class="form-group">
+                <button type="submit">Update Profile</button>
+            </div>
+        </form>
+        <a href="{{ url_for('employee.dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

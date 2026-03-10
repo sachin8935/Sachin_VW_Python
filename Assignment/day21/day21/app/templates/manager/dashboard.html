@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    {% include 'base.html' %}
+    <div class="container">
+        <h1>Welcome to the Manager Dashboard</h1>
+        <div class="employee-list">
+            <h2>Your Team</h2>
+            <ul>
+                {% for employee in employees %}
+                    <li>
+                        <a href="{{ url_for('manager.view_employee', employee_id=employee.id) }}">
+                            {{ employee.name }} - {{ employee.department }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="actions">
+            <a href="{{ url_for('manager.add_employee') }}" class="btn">Add New Employee</a>
+        </div>
+    </div>
+</body>
+</html>
